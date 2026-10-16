@@ -6,5 +6,7 @@ Sistema de Registro, Busca e gerenciamento de horários de ônibus.
 
 # Ambiente de Programação
 Linguagem: Python
+
 Versão da Linguagem: 3.11+
+
 Sistema Operacional de Execução: Windows 10 
