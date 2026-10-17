@@ -13,7 +13,7 @@ class Node:
 class ArvoreB:
     def __init__(self):
         self.raiz = None
-        
+    #R1: registrar_chegada(data, horario, linha)    
     def registrar_chegada(self, data, horario, linha):
         #Inserindo uma nova chegada, regc recebe os dados necessários
         regc = Node(data,horario,linha)
@@ -40,4 +40,44 @@ class ArvoreB:
                     atual.direita = regc
                     return "OK"
                 atual = atual.direita
+    #R6: remover_chegada(data, horario, linha)            
+    def remover_chegada(self, data, horario, linha):
+        chave_alvo = (data,horario,linha)
+        pai = None
+        atual = self.raiz
+
+        while atual and atual.chave != chave_alvo:
+            pai = atual
+            if chave_alvo < atual.chave:
+                atual = atual.esquerda
+            else:
+                atual = atual.direita
+        if not atual: #Mesma coisa que dizer que if atual is None:
+            return "NAO" 
+
+        #Caso 1: 2 filhos -> substituir pelo min da direita
+        if atual.esquerda and atual.direita:
+            pai_suc = atual
+            suc = atual.direita
+            while suc.esquerda:
+                pai_suc = suc
+                suc = suc.esquerda
+            #Copia a chave e os dados do sucessor
+            atual.chave = suc.chave
+            atual.data = suc.data
+            atual.horario = suc.horario
+            atual.linha = suc.linha
+            # O nó a ser removido fisicamente vira o sucessor
+            pai = pai_suc
+            atual = suc
+
+        #Caso 2: 0 ou 1 filho
+        filho = atual.esquerda or atual.direita
+        if pai is None:
+            self.raiz = filho
+        elif pai.esquerda == atual:
+            pai.esquerda = filho
+        else:
+            pai.direita = filho
+        return "OK"
                 
