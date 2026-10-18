@@ -97,37 +97,64 @@ class ArvoreB:
 
 # Formatar a entrada de dados para garantir a consistência do formato antes de registrar, buscar ou remover chegadas
 def formatar_entrada(data, horario, linha):
-  #Remove espaços antes/depois e limita a 8 caracteres
+  #Remove espaços e limita a 8 caracteres
   linha_formatada = linha.strip()[:8]
 
-  #Aceita separadores como '/' ou '.' e converte para AAAA-MM-DD
-  data_limpa = data.strip().replace('/', '-').replace('.', '-')
-  partes_data = data_limpa.split('-')
+  #Tratamento da Data
+  data_limpa = (
+      data.strip()
+      .replace('/', '')
+      .replace('-', '')
+      .replace('.', '')
+      .replace(' ', '')
+  )
 
-  if len(partes_data) == 3:
-    #Se o usuário digitou no formato(DD-MM-AAAA)
-    if len(partes_data[0]) == 2 and len(partes_data[2]) == 4:
-      dia, mes, ano = partes_data
-      data_formatada = f'{ano}-{mes.zfill(2)}-{dia.zfill(2)}'
-    #Se já digitou no formato(AAAA-MM-DD)
+  if len(data_limpa) == 8 and data_limpa.isdigit():
+    #Digitou DDMMAAAA(: 10102000 -> 2000-10-10)
+    if int(data_limpa[4:]) > 1900:
+      dia, mes, ano = data_limpa[:2], data_limpa[2:4], data_limpa[4:]
+      data_formatada = f'{ano}-{mes}-{dia}'
+    #Digitou AAAAMMDD(20001010 -> 2000-10-10)
     else:
-      ano, mes, dia = partes_data
-      data_formatada = f'{ano}-{mes.zfill(2)}-{dia.zfill(2)}'
+      ano, mes, dia = data_limpa[:4], data_limpa[4:6], data_limpa[6:]
+      data_formatada = f'{ano}-{mes}-{dia}'
   else:
-    data_formatada = data_limpa
+    #Caso tenha digitado assim (10/10/2000 ou 2000-10-10)
+    partes_data = (
+        data.strip().replace('/', '-').replace('.', '-').split('-')
+    )
+    if len(partes_data) == 3:
+      if len(partes_data[0]) == 2 and len(partes_data[2]) == 4:
+        dia, mes, ano = partes_data
+        data_formatada = f'{ano}-{mes.zfill(2)}-{dia.zfill(2)}'
+      else:
+        ano, mes, dia = partes_data
+        data_formatada = f'{ano}-{mes.zfill(2)}-{dia.zfill(2)}'
+    else:
+      data_formatada = data.strip()
 
-  #Garante o horário no formato HH:MM:SS
-  horario_limpo = horario.strip()
-  partes_horario = horario_limpo.split(':')
+  #Tratamento do Horário
+  horario_limpo = horario.strip().replace(':', '').replace(' ', '')
 
-  if len(partes_horario) == 2:
-    hh, mm = partes_horario
-    horario_formatado = f'{hh.zfill(2)}:{mm.zfill(2)}:00'
-  elif len(partes_horario) == 3:
-    hh, mm, ss = partes_horario
-    horario_formatado = f'{hh.zfill(2)}:{mm.zfill(2)}:{ss.zfill(2)}'
+  if len(horario_limpo) == 4 and horario_limpo.isdigit():
+    #Digitou HHMM (1830 -> 18:30:00)
+    hh, mm = horario_limpo[:2], horario_limpo[2:]
+    horario_formatado = f'{hh}:{mm}:00'
+  elif len(horario_limpo) == 6 and horario_limpo.isdigit():
+    #Digitou HHMMSS (183000 -> 18:30:00)
+    hh, mm, ss = horario_limpo[:2], horario_limpo[2:4], horario_limpo[4:]
+    horario_formatado = f'{hh}:{mm}:{ss}'
   else:
-    horario_formatado = horario_limpo
+    # Caso tenha digitado os dois pontos(18:30 ou 18:30:00)
+    partes_horario = horario.strip().split(':')
+    if len(partes_horario) == 2:
+      hh, mm = partes_horario
+      horario_formatado = f'{hh.zfill(2)}:{mm.zfill(2)}:00'
+    elif len(partes_horario) == 3:
+      hh, mm, ss = partes_horario
+      horario_formatado = f'{hh.zfill(2)}:{mm.zfill(2)}:{ss.zfill(2)}'
+    else:
+      horario_formatado = horario.strip()
 
   return data_formatada, horario_formatado, linha_formatada
 
