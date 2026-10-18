@@ -29,7 +29,7 @@ class ArvoreB:
             if regc.chave == atual.chave:
                 return "DUPLICADO"
             #Recursivamente confere se regc é menor que a chave atual, se sim, se esquerda de atual estiver livre, regc entra nela, se esquerda n estiver vazia, atual é igual ao mesmo dado olhado na conferência anterior, o que isso faz com que recursivamente se "crie" uma subarvore a esquerda, até que a esquerda de atual esteja livre. 
-            if regc < atual.chave:
+            if regc.chave < atual.chave:
                 if atual.esquerda is None:
                     atual.esquerda = regc
                     return "OK"
@@ -80,4 +80,95 @@ class ArvoreB:
         else:
             pai.direita = filho
         return "OK"
-                
+        
+         # R2: BUSCAR CHEGADA(DATA, HORARIO, LINHA), INFORMA SE A CHEGADA ESTÁ REGISTRADA
+    def buscar_chegada(self,data,horario,linha):
+        atual = self.raiz
+
+        while atual:
+            if (data,horario,linha) == atual.chave:
+                return "ACHOU"
+            elif (data,horario,linha) < atual.chave:
+                atual = atual.esquerda
+            else:
+                atual = atual.direita
+        return "NAO"
+
+
+# Formatar a entrada de dados para garantir a consistência do formato antes de registrar, buscar ou remover chegadas
+def formatar_entrada(data, horario, linha):
+  #Remove espaços antes/depois e limita a 8 caracteres
+  linha_formatada = linha.strip()[:8]
+
+  #Aceita separadores como '/' ou '.' e converte para AAAA-MM-DD
+  data_limpa = data.strip().replace('/', '-').replace('.', '-')
+  partes_data = data_limpa.split('-')
+
+  if len(partes_data) == 3:
+    #Se o usuário digitou no formato(DD-MM-AAAA)
+    if len(partes_data[0]) == 2 and len(partes_data[2]) == 4:
+      dia, mes, ano = partes_data
+      data_formatada = f'{ano}-{mes.zfill(2)}-{dia.zfill(2)}'
+    #Se já digitou no formato(AAAA-MM-DD)
+    else:
+      ano, mes, dia = partes_data
+      data_formatada = f'{ano}-{mes.zfill(2)}-{dia.zfill(2)}'
+  else:
+    data_formatada = data_limpa
+
+  #Garante o horário no formato HH:MM:SS
+  horario_limpo = horario.strip()
+  partes_horario = horario_limpo.split(':')
+
+  if len(partes_horario) == 2:
+    hh, mm = partes_horario
+    horario_formatado = f'{hh.zfill(2)}:{mm.zfill(2)}:00'
+  elif len(partes_horario) == 3:
+    hh, mm, ss = partes_horario
+    horario_formatado = f'{hh.zfill(2)}:{mm.zfill(2)}:{ss.zfill(2)}'
+  else:
+    horario_formatado = horario_limpo
+
+  return data_formatada, horario_formatado, linha_formatada
+
+
+if __name__ == "__main__":
+
+        opc = 0
+        arv = ArvoreB()
+
+        while opc != 4:
+            print("1 - Registrar chegada")
+            print("2 - Buscar chegada")
+            print("3 - Remover chegada")
+            print("4 - Sair")
+            opc = int(input("Escolha uma opção: "))
+
+            if opc == 1:
+                dataf = input("Digite a data: ")
+                horariof = input("Digite o horário: ")
+                linhaf = input("Digite a linha: ")
+
+                data, horario, linha = formatar_entrada(dataf, horariof, linhaf)
+
+                resultado = arv.registrar_chegada(data, horario, linha)
+                print(f"Entrada feita: {data}, {horario}, {linha}")
+                print(resultado)
+
+            elif opc == 2:
+                dataf = input("Digite a data: ")
+                horariof = input("Digite o horário: ")
+                linhaf = input("Digite a linha: ")
+
+                data, horario, linha = formatar_entrada(dataf, horariof, linhaf)
+                resultado = arv.buscar_chegada(data, horario, linha)
+                print(resultado)
+
+            elif opc == 3:
+                dataf = input("Digite a data: ")
+                horariof = input("Digite o horário: ")
+                linhaf = input("Digite a linha: ")
+
+                data, horario, linha = formatar_entrada(dataf, horariof, linhaf)
+                resultado = arv.remover_chegada(data, horario, linha)
+                print(resultado)
