@@ -185,6 +185,33 @@ class ArvoreB:
             altura_esquerda = self.altura(no.esquerda)
             altura_direita = self.altura(no.direita)
             return max(altura_esquerda, altura_direita) + 1
+
+        # R8: espera_semanal(linha, data, horario, k)
+    def espera_semanal(self, linha, data, horario, k):
+        dt_base = datetime.strptime(data, "%Y-%m-%d")
+        h_partes = horario.split(":")
+        seg_consulta = int(h_partes[0]) * 3600 + int(h_partes[1]) * 60 + int(h_partes[2])
+
+        respostas = []
+        # Da semana mais antiga (k-1 semanas atrás) até a data informada (0 semanas atrás)
+        for i in range(k - 1, -1, -1):
+            data_alvo = (dt_base - timedelta(days=7 * i)).strftime("%Y-%m-%d")
+            achado = self.proximo_da_linha(data_alvo, horario, linha)
+
+            # Verifica se achou e se a chegada ocorreu NO MESMO DIA (data_alvo)
+            if achado is not None and achado[0] == data_alvo:
+                hc_partes = achado[1].split(":")
+                seg_chegada = (
+                    int(hc_partes[0]) * 3600
+                    + int(hc_partes[1]) * 60
+                    + int(hc_partes[2])
+                )
+                espera = seg_chegada - seg_consulta
+                respostas.append(f"{data_alvo} {espera}")
+            else:
+                respostas.append(f"{data_alvo} NAOPASSOU")
+
+        return respostas
         
 
 
