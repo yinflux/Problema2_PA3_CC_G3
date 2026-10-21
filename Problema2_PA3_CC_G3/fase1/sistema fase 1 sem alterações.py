@@ -7,7 +7,7 @@ class Node:
         #Criando uma tupla(data, horario, linha), que em python ja faz a comparação lexicográfica
         self.chave = (data, horario, linha)
 
-        self.esquerdo = None
+        self.esquerda = None
         self.direita = None
 #Craindo a classe ArvoreB que irá receber os principais comandos de inserir, remover, buscar
 class ArvoreB:
