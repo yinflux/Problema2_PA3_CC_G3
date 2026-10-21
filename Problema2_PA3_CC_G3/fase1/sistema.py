@@ -93,6 +93,28 @@ class ArvoreB:
             else:
                 atual = atual.direita
         return "NAO"
+    
+    # R3: PRÓXIMO(DATA, HORARIO) RETORNA DATA, HORÁRIO E LINHA DA PRIMEIRA CHEGADA A PARTIR DO INSTANTE INFORMADO, OU, "None"
+    def proximo(self, data, horario):
+       #Monta um alvo com linha vazia, para que a comparação com qualquer chegada >= (data, horario) seja verdadeira
+       alvo = (data, horario, "")
+       atual = self.raiz
+       mlhrNO = None
+
+       while atual:
+            #Se a chave do no ocorreu no mesmo instante ou depois do instante informado, mlhrNO recebe o no atual para buscar por chegadas ainda mais próximas do instante informado
+            if atual.chave >= alvo:
+                mlhrNO = atual
+                atual = (atual.esquerda)
+            else:
+                #O horario é anterior ao instante informado, entao busca por chegadas posteriores ao instante informado
+                atual = (atual.direita)
+       #Se encontrou algum no candidato, retorna os dados do mesmo, caso contrario retorna "None"
+       if mlhrNO:
+            return (mlhrNO.data, mlhrNO.horario, mlhrNO.linha)
+        
+       return None
+        
 
 
 # Formatar a entrada de dados para garantir a consistência do formato antes de registrar, buscar ou remover chegadas
