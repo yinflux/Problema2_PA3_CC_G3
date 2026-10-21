@@ -140,6 +140,41 @@ class ArvoreB:
             atual = atual.direita
 
         return None
+    
+    # R5: entre(data1, horario1, data2, horario2)
+    def entre(self, data1, horario1, data2, horario2):
+        instante_ini = (data1, horario1)
+        instante_fim = (data2, horario2)
+
+        if instante_ini > instante_fim or self.raiz is None:
+            return []
+
+        resultado = []  
+        pilha = []
+        atual = self.raiz
+
+        while pilha or atual:
+            while atual:
+                pilha.append(atual)
+                # Só explora a esquerda se ainda puder haver nós >= instante_ini
+                if (atual.data, atual.horario) >= instante_ini:
+                    atual = atual.esquerda
+                else:
+                    atual = None
+
+            atual = pilha.pop()
+            instante_atual = (atual.data, atual.horario)
+
+            if instante_ini <= instante_atual <= instante_fim:
+                resultado.append((atual.data, atual.horario, atual.linha))
+
+            # Só explora a direita se o nó atual ainda for <= instante_fim
+            if instante_atual <= instante_fim:
+                atual = atual.direita
+            else:
+                atual = None
+
+        return resultado
         
 
 
