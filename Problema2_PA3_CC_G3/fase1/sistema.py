@@ -1,4 +1,5 @@
 #Criando a classe principal da arvore de dados:
+from datetime import datetime, timedelta
 class Node:
     def __init__(self, data, horario, linha):
         self.data = data
@@ -40,7 +41,7 @@ class ArvoreB:
                     atual.direita = regc
                     return "OK"
                 atual = atual.direita
-    #R6: remover_chegada(data, horario, linha)            
+        #R6: remover_chegada(data, horario, linha)            
     def remover_chegada(self, data, horario, linha):
         chave_alvo = (data,horario,linha)
         pai = None
@@ -94,7 +95,7 @@ class ArvoreB:
                 atual = atual.direita
         return "NAO"
     
-    # R3: PRÓXIMO(DATA, HORARIO) RETORNA DATA, HORÁRIO E LINHA DA PRIMEIRA CHEGADA A PARTIR DO INSTANTE INFORMADO, OU, "None"
+         # R3: PRÓXIMO(DATA, HORARIO) RETORNA DATA, HORÁRIO E LINHA DA PRIMEIRA CHEGADA A PARTIR DO INSTANTE INFORMADO, OU, "None"
     def proximo(self, data, horario):
        #Monta um alvo com linha vazia, para que a comparação com qualquer chegada >= (data, horario) seja verdadeira
        alvo = (data, horario, "")
@@ -114,7 +115,7 @@ class ArvoreB:
             return (mlhrNO.data, mlhrNO.horario, mlhrNO.linha)
         
        return None
-    # R4: proximo_da_linha(data, horario, linha)
+        # R4: proximo_da_linha(data, horario, linha)
     def proximo_da_linha(self, data, horario, linha):
         if self.raiz is None:
             return None
@@ -141,7 +142,7 @@ class ArvoreB:
 
         return None
     
-    # R5: entre(data1, horario1, data2, horario2)
+         # R5: entre(data1, horario1, data2, horario2)
     def entre(self, data1, horario1, data2, horario2):
         instante_ini = (data1, horario1)
         instante_fim = (data2, horario2)
@@ -175,6 +176,15 @@ class ArvoreB:
                 atual = None
 
         return resultado
+
+        # R7: ALTURA(ÁRVORE), RETORNA A ALTURA DA ÁRVORE DE CHEGADAS   
+    def altura(self, no):
+        if no is None:
+            return 0
+        else:
+            altura_esquerda = self.altura(no.esquerda)
+            altura_direita = self.altura(no.direita)
+            return max(altura_esquerda, altura_direita) + 1
         
 
 
