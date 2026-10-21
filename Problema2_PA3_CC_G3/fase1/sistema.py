@@ -281,14 +281,20 @@ def formatar_entrada(data, horario, linha):
 
 if __name__ == "__main__":
 
-        opc = 0
+        opc = -1
         arv = ArvoreB()
 
-        while opc != 4:
+        while opc != 0:
             print("1 - Registrar chegada")
             print("2 - Buscar chegada")
             print("3 - Remover chegada")
-            print("4 - Sair")
+            print("4 - Exibir altura da árvore")
+            print("5 - Buscar próximo registro")    
+            print("6 - Buscar próximo registro da linha")
+            print("7 - Buscar chegadas entre dois instantes")
+            print("8 - Espera semanal")
+            print("0 - Sair")
+            
             opc = int(input("Escolha uma opção: "))
 
             if opc == 1:
@@ -319,3 +325,59 @@ if __name__ == "__main__":
                 data, horario, linha = formatar_entrada(dataf, horariof, linhaf)
                 resultado = arv.remover_chegada(data, horario, linha)
                 print(resultado)
+
+            elif opc == 4:
+                            altura = arv.altura(arv.raiz)
+                            print(f"A altura da árvore é: {altura}")
+
+            elif opc == 5:
+                dataf = input("Digite a data: ")
+                horariof = input("Digite o horário: ")
+
+                data, horario, _ = formatar_entrada(dataf, horariof, "")
+                proximo_registro = arv.proximo(data, horario)
+                if proximo_registro:
+                    print(f"Próximo registro: Data: {proximo_registro[0]}, Horário: {proximo_registro[1]}, Linha: {proximo_registro[2]}")
+                else:
+                    print("Não há próximo registro.")
+                    
+            elif opc == 6:
+                dataf = input("Digite a data: ")
+                horariof = input("Digite o horário: ")
+                linhaf = input("Digite a linha: ")
+
+                data, horario, linha = formatar_entrada(dataf, horariof, linhaf)
+                proximo_registro_linha = arv.proximo_da_linha(data, horario, linha)
+                if proximo_registro_linha:
+                    print(f"Próximo registro da linha: Data: {proximo_registro_linha[0]}, Horário: {proximo_registro_linha[1]}")
+                else:
+                    print("Não há próximo registro para a linha especificada.")
+
+            elif opc == 7:
+                data1f = input("Digite a data inicial: ")
+                horario1f = input("Digite o horário inicial: ")
+                data2f = input("Digite a data final: ")
+                horario2f = input("Digite o horário final: ")
+
+                data1, horario1, _ = formatar_entrada(data1f, horario1f, "")
+                data2, horario2, _ = formatar_entrada(data2f, horario2f, "")
+
+                registros_entre = arv.entre(data1, horario1, data2, horario2)
+                if registros_entre:
+                    print("Registros entre os instantes informados:")
+                    for registro in registros_entre:
+                        print(f"Data: {registro[0]}, Horário: {registro[1]}, Linha: {registro[2]}")
+                else:
+                    print("Não há registros entre os instantes informados.")
+
+            elif opc == 8:
+                linhaf = input("Digite a linha: ")
+                dataf = input("Digite a data: ")
+                horariof = input("Digite o horário: ")
+                k = int(input("Digite o número de semanas (k): "))
+
+                data, horario, linha = formatar_entrada(dataf, horariof, linhaf)
+                resultados_espera = arv.espera_semanal(linha, data, horario, k)
+                print("Resultados da espera semanal:")
+                for resultado in resultados_espera:
+                    print(resultado)
