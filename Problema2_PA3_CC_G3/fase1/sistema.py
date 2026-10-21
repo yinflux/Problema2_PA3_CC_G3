@@ -114,6 +114,32 @@ class ArvoreB:
             return (mlhrNO.data, mlhrNO.horario, mlhrNO.linha)
         
        return None
+    # R4: proximo_da_linha(data, horario, linha)
+    def proximo_da_linha(self, data, horario, linha):
+        if self.raiz is None:
+            return None
+
+        pilha = []
+        atual = self.raiz
+        instante_alvo = (data, horario)
+
+        while pilha or atual:
+            while atual:
+                pilha.append(atual)
+                # Só precisa descer à esquerda se o nó atual for >= ao instante buscado
+                if (atual.data, atual.horario) >= instante_alvo:
+                    atual = atual.esquerda
+                else:
+                    atual = None
+
+            atual = pilha.pop()
+
+            if (atual.data, atual.horario) >= instante_alvo and atual.linha == linha:
+                return (atual.data, atual.horario)
+
+            atual = atual.direita
+
+        return None
         
 
 
