@@ -95,7 +95,7 @@ class ArvoreB:
                 atual = atual.direita
         return "NAO"
     
-         # R3: PRÓXIMO(DATA, HORARIO) RETORNA DATA, HORÁRIO E LINHA DA PRIMEIRA CHEGADA A PARTIR DO INSTANTE INFORMADO, OU, "None"
+    # R3: PRÓXIMO(DATA, HORARIO) RETORNA DATA, HORÁRIO E LINHA DA PRIMEIRA CHEGADA A PARTIR DO INSTANTE INFORMADO, OU, "None"
     def proximo(self, data, horario):
        #Monta um alvo com linha vazia, para que a comparação com qualquer chegada >= (data, horario) seja verdadeira
        alvo = (data, horario, "")
@@ -110,15 +110,15 @@ class ArvoreB:
             else:
                 #O horario é anterior ao instante informado, entao busca por chegadas posteriores ao instante informado
                 atual = (atual.direita)
-       #Se encontrou algum no candidato, retorna os dados do mesmo, caso contrario retorna "None"
+       #Se encontrou algum no candidato, retorna os dados do mesmo, caso contrario retorna "Nenhum"
        if mlhrNO:
-            return (mlhrNO.data, mlhrNO.horario, mlhrNO.linha)
+            return f"{mlhrNO.data} {mlhrNO.horario} {mlhrNO.linha}"
         
-       return None
-        # R4: proximo_da_linha(data, horario, linha)
+       return "NENHUM"
+    # R4: proximo_da_linha(data, horario, linha)
     def proximo_da_linha(self, data, horario, linha):
         if self.raiz is None:
-            return None
+            return "NENHUM"
 
         pilha = []
         atual = self.raiz
@@ -136,13 +136,13 @@ class ArvoreB:
             atual = pilha.pop()
 
             if (atual.data, atual.horario) >= instante_alvo and atual.linha == linha:
-                return (atual.data, atual.horario)
+                return f"{atual.data} {atual.horario}"
 
             atual = atual.direita
 
-        return None
+        return "NENHUM"
     
-         # R5: entre(data1, horario1, data2, horario2)
+    # R5: entre(data1, horario1, data2, horario2)
     def entre(self, data1, horario1, data2, horario2):
         instante_ini = (data1, horario1)
         instante_fim = (data2, horario2)
@@ -177,7 +177,7 @@ class ArvoreB:
 
         return resultado
 
-        # R7: ALTURA(ÁRVORE), RETORNA A ALTURA DA ÁRVORE DE CHEGADAS   
+    # R7: ALTURA(ÁRVORE), RETORNA A ALTURA DA ÁRVORE DE CHEGADAS   
     def altura(self, no):
         if no is None:
             return 0
@@ -186,7 +186,7 @@ class ArvoreB:
             altura_direita = self.altura(no.direita)
             return max(altura_esquerda, altura_direita) + 1
 
-        # R8: espera_semanal(linha, data, horario, k)
+    # R8: espera_semanal(linha, data, horario, k)
     def espera_semanal(self, linha, data, horario, k):
         dt_base = datetime.strptime(data, "%Y-%m-%d")
         h_partes = horario.split(":")
@@ -199,15 +199,19 @@ class ArvoreB:
             achado = self.proximo_da_linha(data_alvo, horario, linha)
 
             # Verifica se achou e se a chegada ocorreu NO MESMO DIA (data_alvo)
-            if achado is not None and achado[0] == data_alvo:
-                hc_partes = achado[1].split(":")
-                seg_chegada = (
-                    int(hc_partes[0]) * 3600
-                    + int(hc_partes[1]) * 60
-                    + int(hc_partes[2])
-                )
-                espera = seg_chegada - seg_consulta
-                respostas.append(f"{data_alvo} {espera}")
+            if achado !="NENHUM":
+                data_encontrada, hora_encontrada = achado.split(" ")
+                if data_encontrada == data_alvo:
+                 hc_partes = hora_encontrada.split(":")
+                 seg_chegada = (
+                 int(hc_partes[0]) * 3600
+                  + int(hc_partes[1]) * 60
+                  + int(hc_partes[2])
+                 )
+                 espera = seg_chegada - seg_consulta
+                 respostas.append(f"{data_alvo} {espera}")
+                else:
+                 respostas.append(f"{data_alvo} NAOPASSOU")
             else:
                 respostas.append(f"{data_alvo} NAOPASSOU")
 
