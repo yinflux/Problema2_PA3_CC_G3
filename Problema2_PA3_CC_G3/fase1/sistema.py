@@ -340,10 +340,8 @@ if __name__ == "__main__":
 
                 data, horario, _ = formatar_entrada(dataf, horariof, "")
                 proximo_registro = arv.proximo(data, horario)
-                if proximo_registro:
-                    print(f"Próximo registro: Data: {proximo_registro[0]}, Horário: {proximo_registro[1]}, Linha: {proximo_registro[2]}")
-                else:
-                    print("Não há próximo registro.")
+
+                print(proximo_registro)
                     
             elif opc == 6:
                 dataf = input("Digite a data: ")
@@ -352,10 +350,8 @@ if __name__ == "__main__":
 
                 data, horario, linha = formatar_entrada(dataf, horariof, linhaf)
                 proximo_registro_linha = arv.proximo_da_linha(data, horario, linha)
-                if proximo_registro_linha:
-                    print(f"Próximo registro da linha: Data: {proximo_registro_linha[0]}, Horário: {proximo_registro_linha[1]}")
-                else:
-                    print("Não há próximo registro para a linha especificada.")
+
+                print(proximo_registro_linha)
 
             elif opc == 7:
                 data1f = input("Digite a data inicial: ")
@@ -367,12 +363,12 @@ if __name__ == "__main__":
                 data2, horario2, _ = formatar_entrada(data2f, horario2f, "")
 
                 registros_entre = arv.entre(data1, horario1, data2, horario2)
+                
                 if registros_entre:
-                    print("Registros entre os instantes informados:")
                     for registro in registros_entre:
-                        print(f"Data: {registro[0]}, Horário: {registro[1]}, Linha: {registro[2]}")
+                        print(f"{reg[0]} {reg[1]} {reg[2]}")
                 else:
-                    print("Não há registros entre os instantes informados.")
+                    pass
 
             elif opc == 8:
                 linhaf = input("Digite a linha: ")
