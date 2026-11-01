@@ -1,4 +1,4 @@
-
+#V1 das metricas.py
 #Criando a classe principal da arvore de dados:
 from datetime import datetime, timedelta
 import sys
