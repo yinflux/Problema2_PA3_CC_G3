@@ -182,19 +182,23 @@ class ArvoreB:
         if no is None:
             return 0
         
-        fila = deque([no])
+        fila = [no]
         altura_arvore = 0
-        
+
         while fila:
             tamanho_nivel = len(fila)
-            for _ in range(tamanho_nivel):
-                atual = fila.popleft()
+            proximo_nivel = []
+
+            for i in range(tamanho_nivel):
+                atual = fila[i]
                 if atual.esquerda:
-                    fila.append(atual.esquerda)
+                    proximo_nivel.append(atual.esquerda)
                 if atual.direita:
-                    fila.append(atual.direita)
+                    proximo_nivel.append(atual.direita)
+
+            fila = proximo_nivel
             altura_arvore += 1
-        
+
         return altura_arvore
         
 
