@@ -1,6 +1,5 @@
 
 #Criando a classe principal da arvore de dados:
-from collections import deque
 from datetime import datetime, timedelta
 import sys
 import time
@@ -213,24 +212,27 @@ class ArvoreB:
 
     # R7: ALTURA(ÁRVORE), RETORNA A ALTURA DA ÁRVORE DE CHEGADAS   
     def altura(self, no):
-        self.opr_realizadas += 1 
-        if no is None:
-            return 0
-        
-        fila = deque([no])
-        altura_arvore = 0
-
-        while fila:
-            tamanho_nivel = len(fila)
-            for _ in range(tamanho_nivel):
-                atual = fila.popleft()
-                if atual.esquerda:
-                    fila.append(atual.esquerda)
-                if atual.direita:
-                    fila.append(atual.direita)
-            altura_arvore += 1
-
-        return altura_arvore
+            if no is None:
+                return 0
+    
+            fila = [no]
+            altura_arvore = 0
+    
+            while fila:
+                tamanho_nivel = len(fila)
+                proximo_nivel = []
+    
+                for i in range(tamanho_nivel):
+                    atual = fila[i]
+                    if atual.esquerda:
+                        proximo_nivel.append(atual.esquerda)
+                    if atual.direita:
+                        proximo_nivel.append(atual.direita)
+    
+                fila = proximo_nivel
+                altura_arvore += 1
+    
+            return altura_arvore
 
     # R8: espera_semanal(linha, data, horario, k)
     def espera_semanal(self, linha, data, horario, k):
