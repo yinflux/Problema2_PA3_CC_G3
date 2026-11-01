@@ -181,10 +181,22 @@ class ArvoreB:
     def altura(self, no):
         if no is None:
             return 0
-        else:
-            altura_esquerda = self.altura(no.esquerda)
-            altura_direita = self.altura(no.direita)
-            return max(altura_esquerda, altura_direita) + 1
+        
+        fila = deque([no])
+        altura_arvore = 0
+        
+        while fila:
+            tamanho_nivel = len(fila)
+            for _ in range(tamanho_nivel):
+                atual = fila.popleft()
+                if atual.esquerda:
+                    fila.append(atual.esquerda)
+                if atual.direita:
+                    fila.append(atual.direita)
+            altura_arvore += 1
+        
+        return altura_arvore
+        
 
     # R8: espera_semanal(linha, data, horario, k)
     def espera_semanal(self, linha, data, horario, k):
