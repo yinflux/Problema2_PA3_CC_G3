@@ -79,31 +79,35 @@ class ArvoreB:
     #R1: registrar_chegada(data, horario, linha)    
     def registrar_chegada(self, data, horario, linha):
         #Inserindo uma nova chegada, regc recebe os dados necessários
-        regc = Node(data,horario,linha)
+        regc , resultado = self.registrar_recurs(self.raiz,data,horario,linha)
+        self.raiz = regc
+        return resultado
+    
+    def registrar_recurs(self, no, data, horario, linha):
         #Caso não tenha nenhum dado na raiz, regc passa a ser raiz
-        if self.raiz == None:
-            self.raiz = regc
-            return "OK"
-        #Copia a raiz como atual, temporariamente
-        atual = self.raiz
-       
-        while True:
-            #Se a chave(tupla) de regc for igual a chave atual, retorna "DUPLICADO"
-            if regc.chave == atual.chave:
-                return "DUPLICADO"
-            #Recursivamente confere se regc é menor que a chave atual, se sim, se esquerda de atual estiver livre, regc entra nela, se esquerda n estiver vazia, atual é igual ao mesmo dado olhado na conferência anterior, o que isso faz com que recursivamente se "crie" uma subarvore a esquerda, até que a esquerda de atual esteja livre.
-            if regc.chave < atual.chave:
-                if atual.esquerda is None:
-                    atual.esquerda = regc
-                    return "OK"
-                atual = atual.esquerda
-            else:
-            #Mesma lógica da esquerda, porém nesse caso agora para direita, ou seja, para valores maior que a chave atual
-                if atual.direita is None:
-                    atual.direita = regc
-                    return "OK"
-                atual = atual.direita
-        #R6: remover_chegada(data, horario, linha)            
+        if no is None:
+            return Node(data, horario, linha), "OK"
+        chave_nova = (data, horario, linha)
+
+        #Se a chave(tupla) de chave_nova for igual a chave atual, retorna "DUPLICADO"
+        if chave_nova == no.chave:
+            return no, "DUPLICADO"
+        #Recursivamente confere se chave_nova é menor que o nó atual, se sim, se esquerda de atual estiver livre, chave_nova entra nela, se esquerda n estiver vazia, atual é igual ao mesmo dado olhado na conferência anterior, o que isso faz com que recursivamente se "crie" uma subarvore a esquerda, até que a esquerda de atual esteja livre.
+        if chave_nova < no.chave:
+            no.esquerda, resultado = self.registrar_recurs(no.esquerda, data, horario, linha)
+        else:
+        #Mesma lógica da esquerda, porém nesse caso agora para direita, ou seja, para valores maior que o nó atual
+            no.direita, resultado = self.registrar_recurs(no.direita, data, horario, linha)
+
+        if resultado == "DUPLICADO":
+            return no, "DUPLICADO"
+
+        #Ajuste da altura e rebalanceamento do nó atual(tipico de uma AVL)
+        no_rebalanceado = self.rebalancear(no)
+        
+        return no_rebalanceado, resultado
+    
+    #R6: remover_chegada(data, horario, linha)            
     def remover_chegada(self, data, horario, linha):
         chave_alvo = (data,horario,linha)
         pai = None
