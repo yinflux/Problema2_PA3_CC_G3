@@ -383,7 +383,7 @@ if __name__ == "__main__":
                 
                 if registros_entre:
                     for registro in registros_entre:
-                        print(f"{reg[0]} {reg[1]} {reg[2]}")
+                        print(f"{registro[0]} {registro[1]} {registro[2]}")
                 else:
                     pass
 
