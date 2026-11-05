@@ -107,48 +107,51 @@ class ArvoreB:
         
         return no_rebalanceado, resultado
     
-    #R6: remover_chegada(data, horario, linha)            
+   # R6: remover_chegada(data, horario, linha)
     def remover_chegada(self, data, horario, linha):
-        chave_alvo = (data,horario,linha)
-        pai = None
-        atual = self.raiz
-
-        while atual and atual.chave != chave_alvo:
-            pai = atual
-            if chave_alvo < atual.chave:
-                atual = atual.esquerda
-            else:
-                atual = atual.direita
-        if not atual: #Mesma coisa que dizer que if atual is None:
-            return "NAO"
-
-        #Caso 1: 2 filhos -> substituir pelo min da direita
-        if atual.esquerda and atual.direita:
-            pai_suc = atual
-            suc = atual.direita
-            while suc.esquerda:
-                pai_suc = suc
-                suc = suc.esquerda
-            #Copia a chave e os dados do sucessor
-            atual.chave = suc.chave
-            atual.data = suc.data
-            atual.horario = suc.horario
-            atual.linha = suc.linha
-            # O nó a ser removido fisicamente vira o sucessor
-            pai = pai_suc
-            atual = suc
-
-        #Caso 2: 0 ou 1 filho
-        filho = atual.esquerda or atual.direita
-        if pai is None:
-            self.raiz = filho
-        elif pai.esquerda == atual:
-            pai.esquerda = filho
+        chave_alvo = (data, horario, linha)
+        self.raiz, resultado = self.remover_recurs(self.raiz, chave_alvo)
+        return resultado
+    def remover_recurs(self, no, chave_alvo):
+        # Caso 1: chegou em None e não encontrou a chegada
+        if no is None:
+            return None, "NAO"
+        # Busca recursivamente pela chave_alvo na subárvore esquerda ou direita
+        if chave_alvo < no.chave:
+            no.esquerda, resultado = self.remover_recurs(no.esquerda, chave_alvo)
+        elif chave_alvo > no.chave:
+            no.direita, resultado = self.remover_recurs(no.direita, chave_alvo)
         else:
-            pai.direita = filho
-        return "OK"
+            # Achou o nó a ser removido!
+            # Caso 1: Nó com 0 ou 1 filho
+            if no.esquerda is None:
+                return no.direita, "OK"
+            if no.direita is None:
+                return no.esquerda, "OK"
+        # Caso 2: Nó com 2 filhos -> substitui pelo sucessor (menor da subárvore direita)
+            suc = no.direita
+            while suc.esquerda is not None:
+                suc = suc.esquerda
+
+            # Copia os dados do sucessor para o nó atual
+            no.chave = suc.chave
+            no.data = suc.data
+            no.horario = suc.horario
+            no.linha = suc.linha
+
+            # Remove fisicamente o sucessor da subárvore direita
+            no.direita, _ = self.remover_recurs(no.direita, suc.chave)
+            resultado = "OK"
+
+        # Se a chave não existia na árvore, não rebalanceia
+        if resultado == "NAO":
+            return no, "NAO"
+
+        # Atualiza a altura e rebalanceia o nó atual na volta da recursão (AVL)
+        no_rebalanceado = self.rebalancear(no)
+        return no_rebalanceado, resultado
        
-         # R2: BUSCAR CHEGADA(DATA, HORARIO, LINHA), INFORMA SE A CHEGADA ESTÁ REGISTRADA
+    # R2: BUSCAR CHEGADA(DATA, HORARIO, LINHA), INFORMA SE A CHEGADA ESTÁ REGISTRADA
     def buscar_chegada(self,data,horario,linha):
         atual = self.raiz
 
@@ -243,29 +246,12 @@ class ArvoreB:
 
         return resultado
 
-    # R7: ALTURA(ÁRVORE), RETORNA A ALTURA DA ÁRVORE DE CHEGADAS  
-    def altura(self, no):
+    # R7: ALTURA DA ÁRVORE, RETORNA A ALTURA DA ÁRVORE DE CHEGADAS
+    def altura(self, no=None):
+        # Na AVL, a altura já fica guardada e atualizada na raiz em O(1)
         if no is None:
-            return 0
-       
-        fila = [no]
-        altura_arvore = 0
-
-        while fila:
-            tamanho_nivel = len(fila)
-            proximo_nivel = []
-
-            for i in range(tamanho_nivel):
-                atual = fila[i]
-                if atual.esquerda:
-                    proximo_nivel.append(atual.esquerda)
-                if atual.direita:
-                    proximo_nivel.append(atual.direita)
-
-            fila = proximo_nivel
-            altura_arvore += 1
-
-        return altura_arvore
+            return self.ob_altura(self.raiz)
+        return self.ob_altura(no)
        
 
     # R8: espera_semanal(linha, data, horario, k)
@@ -448,7 +434,7 @@ if __name__ == "__main__":
                
                 if registros_entre:
                     for registro in registros_entre:
-                        print(f"{reg[0]} {reg[1]} {reg[2]}")
+                        print(f"{registro[0]} {registro[1]} {registro[2]}")
                 else:
                     pass
 
