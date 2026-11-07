@@ -22,4 +22,19 @@ Abra um terminal de cmd(prompt de comando) no VS code, ou na IDE que esteja util
 
 Para gerar um arquivo .txt de saidas de cada função coloque: ex:\Problema2_PA3_CC_G3\fase2>py metricas.py < carga_embaralhada_1000.txt > saida.txt   Esse comando tem como print no terminal apenas o bloco de medição, com os tempos totais, as saidas de cada função fica na saida.txt
 
-Agora para apenas poder ver os tempos totais e medição do sistema: ex: py metricas.py < carga_embaralhada_1000.txt > NUL
+Agora para apenas poder ver os tempos totais e medição do sistema: ex: \Problema2_PA3_CC_G3\fase2>py metricas.py < carga_embaralhada_1000.txt > NUL
+
+# FASE 3 - Medição do sistema(testes)
+Para testar o sistema, recomendamos colocar os arquivos de carga na pasta fase3 -> Problema2_PA3_CC_G3/fase3
+o arquivo principal dessa fase é metricasfase3.py, é práticamente uma cópia da função principal do sistema.py da fase3, porém no metricasfase3.py temos a função processar_entradas() que a partir de um arquivo de entradas consegue gerar os resultados de cada operação, e o tempo que é levado para processar cada uma delas.
+
+PS: O código que realiza os testes da fase 3 está exclusivamente na \fase3, como metricasfase3.py
+
+Para a realização dos testes:
+Abra um terminal de cmd(prompt de comando) no VS code, ou na IDE que esteja utilizando (se houver a opção) e escreva os seguintes comandos:
+
+Para gerar um arquivo .txt de saidas de cada função coloque: ex:\Problema2_PA3_CC_G3\fase3>py metricasfase3.py < carga_embaralhada_1000.txt > saida.txt   Esse comando tem como print no terminal apenas o bloco de medição, com os tempos totais, as saidas de cada função fica na saida.txt
+
+Agora para apenas poder ver os tempos totais e medição do sistema: ex:\Problema2_PA3_CC_G3\fase3>py metricasfase3.py < carga_embaralhada_1000.txt > NUL
+
+
