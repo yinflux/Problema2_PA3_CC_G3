@@ -284,6 +284,40 @@ class ArvoreB:
                 respostas.append(f"{data_alvo} NAOPASSOU")
 
         return respostas
+    def LINHAS(self, data1, horario1, data2, horario2):
+        instante_ini = (data1, horario1)
+        instante_fim = (data2, horario2)
+        
+        if instante_ini > instante_fim or self.raiz is None:
+            return 0, []
+        
+        resultado = []  
+        pilha = []
+        atual = self.raiz
+        
+        while pilha or atual:
+            while atual:
+                pilha.append(atual)
+                # Só explora a esquerda se ainda puder haver nós >= instante_ini
+                if (atual.data, atual.horario) >= instante_ini:
+                    atual = atual.esquerda
+                else:
+                    atual = None
+        
+            atual = pilha.pop()
+            instante_atual = (atual.data, atual.horario)
+        
+            if instante_ini <= instante_atual <= instante_fim:
+                if atual.linha not in resultado:
+                    resultado.append((atual.linha))
+        
+            # Só explora a direita se o nó atual ainda for <= instante_fim
+            if instante_atual <= instante_fim:
+                atual = atual.direita
+            else:
+                atual = None
+        
+        return len(resultado), resultado
        
 
 
@@ -365,6 +399,7 @@ if __name__ == "__main__":
             print("6 - Buscar próximo registro da linha")
             print("7 - Buscar chegadas entre dois instantes")
             print("8 - Espera semanal")
+            print("9 - Buscar linhas entre dois instantes")
             print("0 - Sair")
            
             opc = int(input("Escolha uma opção: "))
@@ -449,3 +484,17 @@ if __name__ == "__main__":
                 print("Resultados da espera semanal:")
                 for resultado in resultados_espera:
                     print(resultado)
+
+            elif opc == 9:
+                data1f = input("Digite a data inicial: ")
+                horario1f = input("Digite o horário inicial: ")
+                data2f = input("Digite a data final: ")
+                horario2f = input("Digite o horário final: ")
+
+                data1, horario1, _ = formatar_entrada(data1f, horario1f, "")
+                data2, horario2, _ = formatar_entrada(data2f, horario2f, "")
+
+                num_linhas, linhas = arv.LINHAS(data1, horario1, data2, horario2)
+                print(f"Número de linhas distintas: {num_linhas}")
+                for linha in linhas:
+                    print(linha)
